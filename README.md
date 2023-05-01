@@ -1,1 +1,1 @@
-# Roth_SantAnna_Staggered_replication_application
+# Replication files for the Application in Roth and Sant'Anna (2023)

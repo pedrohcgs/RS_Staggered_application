@@ -87,7 +87,7 @@ saveRDS(bal_checks_results_nospecial_nopilot,
 # Drop later cohorts and special/pilot units
 #---------------------------------------------------------------------------------------------------------------
 pj_officer_level_balanced_nospecial_nopilot_omit_late_g <- pj_officer_level_balanced_nospecial_nopilot %>%
-  filter(first_trained<60)
+  filter(first_trained<=60)
 
 
 ## Summary parameter results without special units and dropping later cohorts----

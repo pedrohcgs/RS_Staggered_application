@@ -322,7 +322,7 @@ percentage_effects_table %>%
 ## Robustness check to omitting later cohorts ---- Appendix Figure 4
 #---------------------------------------------------------------------------------------------------------------
 pj_officer_level_balanced_nospecial_nopilot_omit_late_g <- pj_officer_level_balanced_nospecial_nopilot %>%
-  filter(first_trained<60)
+  filter(first_trained<=60)
 
 complaints_results_omit_late_g <- compute_efficient_estimator_for_outcome(outcome = "complaints", 
                                                                           pj_officer_level_balanced_nospecial_nopilot_omit_late_g , 

@@ -3,7 +3,7 @@
 # This script run all the analyzes
 #---------------------------------------------------------------------------------------------------------------
 library(here)
-#remotes::install_github("jonathandroth/staggered")
+# remotes::install_github("jonathandroth/staggered")
 #---------------------------------------------------------------------------------------------------------------
 source(here("Code/01_main_wood-et-al-no-special_ops-no-pilot"))
 source(here("Code/02_balance_checks_pre_tests.R"))

@@ -2,6 +2,8 @@
 # It revisit the the Wood et al. application, but focus attention on the sample
 # with no special forces and without the pilot period.
 #---------------------------------------------------------------------------------------------------------------
+rm(list=ls(all=TRUE))
+#---------------------------------------------------------------------------------------------------------------
 library(here)
 library(dplyr)
 library(ggplot2)
@@ -110,49 +112,61 @@ compute_CS_estimator_for_outcome <-
     return(results)
   }
 #---------------------------------------------------------------------------------------------------------------
-
 ## Summary of the results ----
 complaints_results <- compute_efficient_estimator_for_outcome(outcome = "complaints",
                                                               pj_officer_level_balanced_nospecial_nopilot, 
                                                               compute_fisher = TRUE)
+
 sustained_results <- compute_efficient_estimator_for_outcome(outcome = "sustained",
                                                              pj_officer_level_balanced_nospecial_nopilot,
                                                              compute_fisher = TRUE)
+
 force_results <- compute_efficient_estimator_for_outcome(outcome = "force", 
                                                          pj_officer_level_balanced_nospecial_nopilot,
                                                          compute_fisher = TRUE)
-efficient_results <- bind_rows(complaints_results, sustained_results, force_results) %>% 
+
+efficient_results <- bind_rows(complaints_results,
+                               sustained_results,
+                               force_results) %>% 
   mutate(estimator = "efficient")
 
 complaints_resultsCS <- compute_CS_estimator_for_outcome(outcome = "complaints",
                                                          pj_officer_level_balanced_nospecial_nopilot, 
                                                          compute_fisher = TRUE)
+
 sustained_resultsCS <- compute_CS_estimator_for_outcome(outcome = "sustained", 
                                                         pj_officer_level_balanced_nospecial_nopilot, 
                                                         compute_fisher = TRUE)
+
 force_resultsCS <- compute_CS_estimator_for_outcome(outcome = "force",
                                                     pj_officer_level_balanced_nospecial_nopilot, 
                                                     compute_fisher = TRUE)
-CS_results <- bind_rows(complaints_resultsCS, sustained_resultsCS, force_resultsCS) %>% 
+
+CS_results <- bind_rows(complaints_resultsCS,
+                        sustained_resultsCS, 
+                        force_resultsCS) %>% 
   mutate(estimator = "CS")
 
 # Save
-saveRDS(efficient_results, here("Temp/wood-et-al-application/efficient_results-nospecial_nopilot.rds"))
-saveRDS(CS_results,here("Temp/wood-et-al-application/CS_results-nospecial_nopilot.rds"))
-
-efficient_results <- readRDS(here("Temp/wood-et-al-application/efficient_results-nospecial_nopilot.rds"))
-CS_results <- readRDS(here("Temp/wood-et-al-application/CS_results-nospecial_nopilot.rds"))
+saveRDS(efficient_results,
+        here("Temp/wood-et-al-application/efficient_results-nospecial_nopilot.rds"))
+saveRDS(CS_results,
+        here("Temp/wood-et-al-application/CS_results-nospecial_nopilot.rds"))
+#---------------------------------------------------------------------------------------------------------------
+# 
+# efficient_results <- readRDS(here("Temp/wood-et-al-application/efficient_results-nospecial_nopilot.rds"))
+# CS_results <- readRDS(here("Temp/wood-et-al-application/CS_results-nospecial_nopilot.rds"))
 #---------------------------------------------------------------------------------------------------------------
 # Export the tables - Figure 1 of the paper
-long_table <- bind_rows(efficient_results, CS_results)
-wide_table <-
-  long_table %>%
+long_table <- bind_rows(efficient_results,
+                        CS_results)
+
+wide_table <- long_table %>%
   tidyr::pivot_wider(id_cols = c(estimand,outcome), 
                      names_from = estimator,
                      values_from = c(estimate,se, fisher_pval))
 
-cs_ratio_comparison <-
-  wide_table %>%
+cs_ratio_comparison <- wide_table %>%
   filter(estimand != "ES0") %>%
   mutate(se_ratio = se_CS / se_efficient, 
          t_stat_efficient = estimate_efficient/se_efficient, 
@@ -162,13 +176,15 @@ cs_ratio_comparison <-
 cs_ratio_comparison
 
 # Figure 1 of the paper
-long_table %>% 
+Fig1 <- long_table %>% 
   filter(estimand != "ES0") %>% #remove ES0 since we will have the event-study plot
   mutate(estimator = ifelse(estimator == "efficient", "PlugIn",estimator)) %>%
   mutate(ymin = estimate + 1.96*se,
          ymax = estimate - 1.96*se)%>% 
-  ggplot(aes(x=estimand, y = estimate, ymin = ymin, ymax = ymax, color = estimator, shape = estimator)) +
-  geom_pointrange(position =  position_dodge(width = 0.3), size =.3) +
+  ggplot(aes(x=estimand, y = estimate, 
+             ymin = ymin, ymax = ymax, 
+             color = estimator, shape = estimator)) +
+  geom_pointrange(position =  position_dodge(width = 0.3), linewidth =.3) +
   facet_wrap(~outcome) + 
   fte_theme() +
   xlab("Estimand") + ylab("Estimate") +
@@ -177,6 +193,7 @@ long_table %>%
   geom_hline(yintercept = 0)
 
 ggsave(here("Figures/Wood-et-al-application/summary-estimand-comparsion-nospecial_nopilot.png"),
+       plot = Fig1,
        width = 8, height =4)
 #---------------------------------------------------------------------------------------------------------------
 ## Efficient Event-study including pre-periods - Appendix Figure 1
@@ -185,6 +202,7 @@ force_ES_results <- compute_efficient_eventstudy_for_outcome(outcome = "force",
                                                              df=pj_officer_level_balanced_nospecial_nopilot,
                                                              firstTime = -12,
                                                              lastTime = 23)
+
 complaints_ES_results <- compute_efficient_eventstudy_for_outcome(outcome = "complaints", 
                                                                   df=pj_officer_level_balanced_nospecial_nopilot, 
                                                                   firstTime = -12, 

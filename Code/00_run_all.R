@@ -5,6 +5,6 @@
 library(here)
 # remotes::install_github("jonathandroth/staggered")
 #---------------------------------------------------------------------------------------------------------------
-source(here("Code/01_main_wood-et-al-no-special_ops-no-pilot.R"))
-source(here("Code/02_balance_checks_pre_tests.R"))
-source(here("Code/03_balance_on_age.R"))
+source(here::here("Code/01_main_wood-et-al-no-special_ops-no-pilot.R"))
+source(here::here("Code/02_balance_checks_pre_tests.R"))
+source(here::here("Code/03_balance_on_age.R"))

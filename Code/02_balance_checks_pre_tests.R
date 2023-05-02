@@ -1,6 +1,8 @@
 # This script replicate the Empirical Application in Roth and Sant'Anna (2023)
 # It reproduces Table 6 and Appendix Table 14.
 #---------------------------------------------------------------------------------------------------------------
+rm(list=ls(all=TRUE))
+#---------------------------------------------------------------------------------------------------------------
 library(here)
 library(dplyr)
 library(ggplot2)

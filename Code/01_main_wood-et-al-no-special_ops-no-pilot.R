@@ -9,6 +9,7 @@ library(dplyr)
 library(ggplot2)
 library(purrr)
 #library(doAzureParallel)
+
 library(staggered)
 library(glue)
 library(RColorBrewer)
@@ -20,7 +21,7 @@ library(webshot2)
 source(here("Code/aux_fte_theme.R"))
 set.seed(20211124)
 #---------------------------------------------------------------------------------------------------------------
-# Functions to compute event study
+# Functions to compute event study (must have more than 1 event time, otherwise supT function breaks)
 
 compute_efficient_event_study <- function(df, firstTime =0, lastTime, beta = NULL,...){
   staggeredResults <- staggered(df = df, estimand = "eventstudy", 

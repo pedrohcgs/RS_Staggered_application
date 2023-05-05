@@ -17,7 +17,7 @@ library(fixest)
 library(webshot2)
 #---------------------------------------------------------------------------------------------------------------
 source(here("Code/aux_fte_theme.R"))
-num_fisher_permutations = 1000
+num_fisher_permutations = 5000
 set.seed(20211124)
 #---------------------------------------------------------------------------------------------------------------
 
@@ -130,4 +130,5 @@ pj_officer_level_balanced_nospecial %>%
 
 ggsave(here("Figures/Wood-et-al-application/age-balance-scatter.png"),
          width =8, height = 4)
-
+#---------------------------------------------------------------------------------------------------------------
+save.image(here("Temp/wood-et-al-application/balance_on_age.RData"))

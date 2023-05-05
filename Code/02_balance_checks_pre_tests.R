@@ -22,7 +22,7 @@ source(here("Code/aux_fte_theme.R"))
 
 load(here("Data/procedural_justice_revisited/products/rdata/3_officer_level_data.RData"))
 #---------------------------------------------------------------------------------------------------------------
-num_fisher_permutations = 1000
+num_fisher_permutations = 5000
 set.seed(11182021)
 #---------------------------------------------------------------------------------------------------------------
 balance_checks_for_outcome <-

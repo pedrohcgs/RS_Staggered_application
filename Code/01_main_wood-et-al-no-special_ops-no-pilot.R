@@ -20,7 +20,7 @@ library(webshot2)
 #---------------------------------------------------------------------------------------------------------------
 source(here("Code/aux_fte_theme.R"))
 set.seed(20211124)
-num_fisher_permutations = 1000
+num_fisher_permutations = 5000
 #---------------------------------------------------------------------------------------------------------------
 # Functions to compute event study (must have more than 1 event time, otherwise supT function breaks)
 

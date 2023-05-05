@@ -22,7 +22,7 @@ source(here("Code/aux_fte_theme.R"))
 
 load(here("Data/procedural_justice_revisited/products/rdata/3_officer_level_data.RData"))
 #---------------------------------------------------------------------------------------------------------------
-num_fisher_permutations = 500
+num_fisher_permutations = 1000
 set.seed(11182021)
 #---------------------------------------------------------------------------------------------------------------
 balance_checks_for_outcome <-
@@ -146,9 +146,9 @@ rbind(bal_checks_results_nospecial_nopilot, bal_checks_results) %>%
   select(outcome, estimand, contains("Main"), contains("Including")) %>% #order columns
   gt() %>%
   fmt_number(contains("Xhat"), decimals = 3) %>%
-  fmt_number(contains("fisher"), decimals = 2) %>%
+  fmt_number(contains("fisher"), decimals = 3) %>%
   fmt_number(contains("t_test"), decimals = 2) %>%
-  fmt_number(contains("pvalue"), decimals = 2) %>%
+  fmt_number(contains("pvalue"), decimals = 3) %>%
   tab_spanner(label = "Main Estimation Sample", contains("Main")) %>%
   tab_spanner(label = "Including pilot + special", contains("Including")) %>%
   cols_label(outcome = "Outcome", estimand = "Estimand",
@@ -176,9 +176,9 @@ rbind(bal_checks_results_nospecial_nopilot, bal_checks_results_nospecial_nopilot
   select(outcome, estimand, contains("Main"), contains("Omit")) %>% #order columns
   gt() %>%
   fmt_number(contains("Xhat"), decimals = 3) %>%
-  fmt_number(contains("fisher"), decimals = 2) %>%
+  fmt_number(contains("fisher"), decimals = 3) %>%
   fmt_number(contains("t_test"), decimals = 2) %>%
-  fmt_number(contains("pvalue"), decimals = 2) %>%
+  fmt_number(contains("pvalue"), decimals = 3) %>%
   tab_spanner(label = "Main Estimation Sample", contains("Main")) %>%
   tab_spanner(label = "Omit later treated", contains("Omit")) %>%
   cols_label(outcome = "Outcome", estimand = "Estimand",

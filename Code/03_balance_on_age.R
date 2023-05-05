@@ -17,7 +17,7 @@ library(fixest)
 library(webshot2)
 #---------------------------------------------------------------------------------------------------------------
 source(here("Code/aux_fte_theme.R"))
-
+num_fisher_permutations = 1000
 set.seed(20211124)
 #---------------------------------------------------------------------------------------------------------------
 
@@ -100,7 +100,7 @@ permuteOfficerTreatment <- function(seed){
     rename(first_trained = g, uid = i)
 }
 
-frt_results_age <- purrr::map_df(.x = 1:1000, 
+frt_results_age <- purrr::map_df(.x = 1:num_fisher_permutations, 
                                  .f = ~check_age_balance(permuteOfficerTreatment(seed = .x)))
 
 actual_results_age <- check_age_balance(pj_officer_level_balanced_nospecial)

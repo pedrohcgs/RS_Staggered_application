@@ -20,6 +20,7 @@ library(webshot2)
 #---------------------------------------------------------------------------------------------------------------
 source(here("Code/aux_fte_theme.R"))
 set.seed(20211124)
+num_fisher_permutations = 1000
 #---------------------------------------------------------------------------------------------------------------
 # Functions to compute event study (must have more than 1 event time, otherwise supT function breaks)
 
@@ -28,6 +29,7 @@ compute_efficient_event_study <- function(df, firstTime =0, lastTime, beta = NUL
                                 eventTime = firstTime:lastTime,
                                 beta=beta, 
                                 return_full_vcv = TRUE,
+                                num_fisher_permutations = num_fisher_permutations,
                                 ...)   
   df <- staggeredResults$resultsDF
   vcv <- staggeredResults$vcv
@@ -77,13 +79,26 @@ compute_efficient_estimator_for_outcome <-
     #df <- simulate_data_fn(seed)
     df <- df %>% rename(t = period, y = !!outcome, g = first_trained, i = uid)
     
-    simple_results <- staggered(df = df, estimand = "simple",...) %>% 
+    simple_results <- staggered(df = df,
+                                estimand = "simple",
+                                num_fisher_permutations = num_fisher_permutations,
+                                ...) %>% 
       mutate(estimand = "simple")
-    calendar_results <- staggered(df = df, estimand = "calendar",...) %>% 
+    calendar_results <- staggered(df = df,
+                                  estimand = "calendar",
+                                  num_fisher_permutations = num_fisher_permutations,
+                                  ...) %>% 
       mutate(estimand = "calendar")
-    cohort_results <- staggered(df = df, estimand = "cohort",...) %>% 
+    cohort_results <- staggered(df = df,
+                                estimand = "cohort",
+                                num_fisher_permutations = num_fisher_permutations,
+                                ...) %>% 
       mutate(estimand = "cohort")
-    eventtime_results <- staggered(df = df, estimand = "eventstudy",eventTime = 0,...) %>% 
+    eventtime_results <- staggered(df = df,
+                                   estimand = "eventstudy",
+                                   eventTime = 0,
+                                   num_fisher_permutations = num_fisher_permutations,
+                                   ...) %>% 
       mutate(estimand = "ES0")
     results <- bind_rows(simple_results, 
                          calendar_results,
@@ -99,13 +114,20 @@ compute_CS_estimator_for_outcome <-
     #df <- simulate_data_fn(seed)
     df <- df %>% rename(t = period, y = !!outcome, g = first_trained, i = uid)
     
-    simple_results <- staggered(df = df, estimand = "simple", beta =1, use_DiD_A0=TRUE,...) %>% 
+    simple_results <- staggered(df = df, estimand = "simple", beta =1, use_DiD_A0=TRUE,
+                                num_fisher_permutations = num_fisher_permutations,...) %>% 
       mutate(estimand = "simple")
-    calendar_results <- staggered(df = df, estimand = "calendar",beta =1,use_DiD_A0=TRUE,...) %>% 
+    calendar_results <- staggered(df = df, estimand = "calendar",
+                                  beta =1,use_DiD_A0=TRUE,
+                                  num_fisher_permutations = num_fisher_permutations,...) %>% 
       mutate(estimand = "calendar")
-    cohort_results <- staggered(df = df, estimand = "cohort",beta =1,use_DiD_A0=TRUE,...) %>% 
+    cohort_results <- staggered(df = df, estimand = "cohort",
+                                beta =1,use_DiD_A0=TRUE,
+                                num_fisher_permutations = num_fisher_permutations,...) %>% 
       mutate(estimand = "cohort")
-    eventtime_results <- staggered(df = df, estimand = "eventstudy",beta =1,eventTime = 0,use_DiD_A0=TRUE,...) %>% 
+    eventtime_results <- staggered(df = df, estimand = "eventstudy",
+                                   beta =1,eventTime = 0,use_DiD_A0=TRUE,
+                                   num_fisher_permutations = num_fisher_permutations,...) %>% 
       mutate(estimand = "ES0")
     results <- bind_rows(simple_results, calendar_results, cohort_results, eventtime_results) %>% 
       mutate(outcome = outcome)
@@ -321,7 +343,7 @@ percentage_effects_table %>%
   gt() %>%
   fmt_percent(contains("_mean"),decimals = 0) %>%
   fmt_number("pretreatmentMean", decimals = 3) %>%
-  fmt_number(contains("fisher"), decimals = 2) %>%
+  fmt_number(contains("fisher"), decimals = 3) %>%
   fmt_number("CI_ratio", decimals = 1) %>%
   tab_spanner(label = "Plug-In", contains("efficient")) %>%
   tab_spanner(label = "CS", contains("CS")) %>%

@@ -366,13 +366,13 @@ pj_officer_level_balanced_nospecial_nopilot_omit_late_g <- pj_officer_level_bala
   filter(first_trained<=60)
 
 complaints_results_omit_late_g <- compute_efficient_estimator_for_outcome(outcome = "complaints", 
-                                                                          pj_officer_level_balanced_nospecial_nopilot_omit_late_g , 
+                                                                          df=pj_officer_level_balanced_nospecial_nopilot_omit_late_g , 
                                                                           compute_fisher = TRUE)
 sustained_results_omit_late_g <- compute_efficient_estimator_for_outcome(outcome = "sustained",
-                                                                         pj_officer_level_balanced_nospecial_nopilot_omit_late_g,
+                                                                         df=pj_officer_level_balanced_nospecial_nopilot_omit_late_g,
                                                                          compute_fisher = TRUE)
 force_results_omit_late_g <- compute_efficient_estimator_for_outcome(outcome = "force",
-                                                                     pj_officer_level_balanced_nospecial_nopilot_omit_late_g,
+                                                                     df=pj_officer_level_balanced_nospecial_nopilot_omit_late_g,
                                                                      compute_fisher = TRUE)
 efficient_results_omit_late_g <- bind_rows(complaints_results_omit_late_g,
                                            sustained_results_omit_late_g, 
@@ -380,13 +380,13 @@ efficient_results_omit_late_g <- bind_rows(complaints_results_omit_late_g,
   mutate(estimator = "efficient")
 
 complaints_results_omit_late_gCS <- compute_CS_estimator_for_outcome(outcome = "complaints",
-                                                                     pj_officer_level_balanced_nospecial_nopilot,
+                                                                     df=pj_officer_level_balanced_nospecial_nopilot_omit_late_g,
                                                                      compute_fisher = TRUE)
 sustained_results_omit_late_gCS <- compute_CS_estimator_for_outcome(outcome = "sustained", 
-                                                                    pj_officer_level_balanced_nospecial_nopilot,
+                                                                    df=pj_officer_level_balanced_nospecial_nopilot_omit_late_g,
                                                                     compute_fisher = TRUE)
 force_results_omit_late_gCS <- compute_CS_estimator_for_outcome(outcome = "force",
-                                                                pj_officer_level_balanced_nospecial_nopilot, 
+                                                                df=pj_officer_level_balanced_nospecial_nopilot_omit_late_g, 
                                                                 compute_fisher = TRUE)
 CS_results_omit_late_g <- bind_rows(complaints_results_omit_late_gCS,
                                     sustained_results_omit_late_gCS, 

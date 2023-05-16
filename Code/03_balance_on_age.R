@@ -115,13 +115,13 @@ pvals <-
       pracma::repmat(as.matrix(actual_results_age), n = NROW(frt_results_age), m = 1) 
   )
 pvals
-# #Regression using actual data
-# reg_linear <-  pj_officer_level_balanced_nospecial_nopilot %>% 
-#   filter(period == 1) %>% 
-#   fixest::feols(fml = birth_year ~ first_trained,
-#                 vcov = "hetero",
-#                 data = .)
-# reg_linear
+#Regression using actual data
+reg_linear <-  pj_officer_level_balanced_nospecial_nopilot %>%
+  filter(period == 1) %>%
+  fixest::feols(fml = birth_year ~ first_trained,
+                vcov = "hetero",
+                data = .)
+reg_linear
 #---------------------------------------------------------------------------------------------------------------
 # This is Appendix Figure 3
 pj_officer_level_balanced_nospecial_nopilot %>% 

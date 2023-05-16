@@ -25,30 +25,30 @@ load(here("Data/procedural_justice_revisited/products/rdata/3_officer_level_data
 
 
 assignment <- readRDS(here("Data/procedural_justice-master/products/rdata/assignment.rds"))
-pj_officer_level_balanced_nospecial <-
+pj_officer_level_balanced_nospecial_nopilot <-
   pj_officer_level_balanced %>%
   left_join(assignment %>%
               select(uid,type,unit),
             by = "uid") %>%
   filter(!is.na(type) & type != "special") %>%
-  filter(first_trained  > 14) #exclude pilot as well
+  filter(first_trained > 14)
 
 #---------------------------------------------------------------------------------------------------------------
 
-check_age_balance <- function(pj_officer_level_balanced_nospecial){
+check_age_balance <- function(pj_officer_level_balanced_nospecial_nopilot){
   
   
   #Linear regression of birth_year on first_trained
-  reg_linear <- pj_officer_level_balanced_nospecial %>% 
+  reg_linear <- pj_officer_level_balanced_nospecial_nopilot %>% 
     filter(period == 1) %>% 
     fixest::feols(fml = birth_year ~ first_trained, 
                   vcov = "hetero",
                   data = .)
   
-  fstat_linear <- fitstat(reg_linear, type = "f")$f$stat
+  fstat_linear <- fitstat(reg_linear, type = "f", vcov = "hetero")$f$stat
   
   #Regression of birthyear on first_trained dummies
-  reg_dummies <- pj_officer_level_balanced_nospecial %>% 
+  reg_dummies <- pj_officer_level_balanced_nospecial_nopilot %>% 
     filter(period == 1) %>% 
     fixest::feols(fml = birth_year ~ factor(first_trained), 
                   vcov = "hetero",
@@ -91,13 +91,13 @@ permuteTreatment <- function(df,i_g_table, seed){
 }
 
 #---------------------------------------------------------------------------------------------------------------
-i_g_table <- pj_officer_level_balanced_nospecial %>%
+i_g_table <- pj_officer_level_balanced_nospecial_nopilot %>%
   filter(period == 1) %>%
   rename(g = first_trained, i = uid) %>%
   select(i,g)
 
 permuteOfficerTreatment <- function(seed){
-  permuteTreatment(df = pj_officer_level_balanced_nospecial %>%
+  permuteTreatment(df = pj_officer_level_balanced_nospecial_nopilot %>%
                      rename(g = first_trained, i = uid),
                    i_g_table = i_g_table, 
                    seed = seed) %>%
@@ -107,24 +107,24 @@ permuteOfficerTreatment <- function(seed){
 frt_results_age <- purrr::map_df(.x = 1:num_fisher_permutations, 
                                  .f = ~check_age_balance(permuteOfficerTreatment(seed = .x)))
 
-actual_results_age <- check_age_balance(pj_officer_level_balanced_nospecial)
+actual_results_age <- check_age_balance(pj_officer_level_balanced_nospecial_nopilot)
 
 pvals <-
   colMeans(
     frt_results_age >= 
       pracma::repmat(as.matrix(actual_results_age), n = NROW(frt_results_age), m = 1) 
   )
-
-#Regression using actual data
-reg_linear <-  pj_officer_level_balanced_nospecial %>% 
-  filter(period == 1) %>% 
-  fixest::feols(fml = birth_year ~ first_trained,
-                vcov = "hetero",
-                data = .)
-reg_linear
+pvals
+# #Regression using actual data
+# reg_linear <-  pj_officer_level_balanced_nospecial_nopilot %>% 
+#   filter(period == 1) %>% 
+#   fixest::feols(fml = birth_year ~ first_trained,
+#                 vcov = "hetero",
+#                 data = .)
+# reg_linear
 #---------------------------------------------------------------------------------------------------------------
 # This is Appendix Figure 3
-pj_officer_level_balanced_nospecial %>% 
+pj_officer_level_balanced_nospecial_nopilot %>% 
   filter(period == 1) %>%
   ggplot(aes(x = first_trained, y = birth_year)) +
   geom_point(alpha = 0.8) + 

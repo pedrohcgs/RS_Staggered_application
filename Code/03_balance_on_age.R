@@ -41,14 +41,18 @@ check_age_balance <- function(pj_officer_level_balanced_nospecial){
   #Linear regression of birth_year on first_trained
   reg_linear <- pj_officer_level_balanced_nospecial %>% 
     filter(period == 1) %>% 
-    fixest::feols(fml = birth_year ~ first_trained, data = .)
+    fixest::feols(fml = birth_year ~ first_trained, 
+                  vcov = "hetero",
+                  data = .)
   
   fstat_linear <- fitstat(reg_linear, type = "f")$f$stat
   
   #Regression of birthyear on first_trained dummies
   reg_dummies <- pj_officer_level_balanced_nospecial %>% 
     filter(period == 1) %>% 
-    fixest::feols(fml = birth_year ~ factor(first_trained), data = ., ) 
+    fixest::feols(fml = birth_year ~ factor(first_trained), 
+                  vcov = "hetero",
+                  data = ., ) 
   
   reg_dummies_summary <- reg_dummies %>% summary()
   max_t_dummies <- max(abs(reg_dummies_summary$coeftable[-1, "t value"]))
@@ -114,7 +118,9 @@ pvals <-
 #Regression using actual data
 reg_linear <-  pj_officer_level_balanced_nospecial %>% 
   filter(period == 1) %>% 
-  fixest::feols(fml = birth_year ~ first_trained, data = .)
+  fixest::feols(fml = birth_year ~ first_trained,
+                vcov = "hetero",
+                data = .)
 reg_linear
 #---------------------------------------------------------------------------------------------------------------
 # This is Appendix Figure 3

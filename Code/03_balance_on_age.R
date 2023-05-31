@@ -129,12 +129,12 @@ pj_officer_level_balanced_nospecial_nopilot %>%
   ggplot(aes(x = first_trained, y = birth_year)) +
   geom_point(alpha = 0.8) + 
   stat_summary_bin(fun='mean', bins=20,
-                   color='orange', size=2, geom='point', shape ="triangle") +
+                   color='orange', size=4, geom='point', shape ="triangle") +
   xlab("Training Month") +
   ylab("Year of Birth") +
   fte_theme()
 
-ggsave(here("Figures/Wood-et-al-application/age-balance-scatter.png"),
+ggsave(here("Figures/Wood-et-al-application/age-balance-scatter.eps"),
          width =8, height = 4)
 #---------------------------------------------------------------------------------------------------------------
 save.image(here("Temp/wood-et-al-application/balance_on_age.RData"))

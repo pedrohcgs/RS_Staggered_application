@@ -207,7 +207,7 @@ Fig1 <- long_table %>%
   ggplot(aes(x=estimand, y = estimate, 
              ymin = ymin, ymax = ymax, 
              color = estimator, shape = estimator)) +
-  geom_pointrange(position =  position_dodge(width = 0.3), linewidth =.3) +
+  geom_pointrange(position =  position_dodge(width = .3), linewidth =.8) +
   facet_wrap(~outcome) + 
   fte_theme() +
   xlab("Estimand") + ylab("Estimate") +
@@ -215,7 +215,7 @@ Fig1 <- long_table %>%
   scale_shape_discrete(name = "Estimator") +
   geom_hline(yintercept = 0)
 
-ggsave(here("Figures/Wood-et-al-application/summary-estimand-comparsion-nospecial_nopilot.png"),
+ggsave(here("Figures/Wood-et-al-application/summary-estimand-comparsion-nospecial_nopilot.eps"),
        plot = Fig1,
        width = 8, height =4)
 #---------------------------------------------------------------------------------------------------------------
@@ -258,7 +258,7 @@ efficient_ES_results %>%
   scale_color_manual(name = "Confidence Bands", values = RColorBrewer::brewer.pal(n=8,"Blues")[c(8,6)]) +
   facet_wrap(~outcome)
 
-ggsave(here("Figures/Wood-et-al-application/efficient-event-study-plot-nospecial_nopilot-with-pretrends.png"),
+ggsave(here("Figures/Wood-et-al-application/efficient-event-study-plot-nospecial_nopilot-with-pretrends.eps"),
        width = 8, height =4)
 #---------------------------------------------------------------------------------------------------------------
 # Event Study for CS. - Appendix Figure 2
@@ -305,7 +305,7 @@ efficient_ES_resultsCS %>%
   scale_color_manual(name = "Confidence Bands", values = RColorBrewer::brewer.pal(n=8,"Blues")[c(8,6)]) +
   facet_wrap(~outcome)
 
-ggsave(here("Figures/Wood-et-al-application/CS2-event-study-plot-nospecial_nopilot-with-pretrends.png"),
+ggsave(here("Figures/Wood-et-al-application/CS2-event-study-plot-nospecial_nopilot-with-pretrends.eps"),
        width = 8, height =4)
 #---------------------------------------------------------------------------------------------------------------
 
@@ -329,7 +329,7 @@ percentage_effects_table %>% filter(estimand == "simple") %>%
   select(estimand,outcome,estimator, contains("lb"), contains("estimate"), contains("ub"))
 
 #Table 5 of the paper
-percentage_effects_table %>% 
+table5 <- percentage_effects_table %>% 
   select(outcome,estimand,estimator, pretreatmentMean, contains("estimate"), 
          contains("lb"), contains("ub"), fisher_pval) %>%
   filter(estimand != "ES0") %>%
@@ -357,8 +357,11 @@ percentage_effects_table %>%
              yub_over_pretreatment_mean_CS = "UB",
              CI_ratio = "CI Ratio",
              fisher_pval_efficient = "p-val (FRT)",
-             fisher_pval_CS = "p-val (FRT)") %>%
-  gtsave(here("Tables/wood-et-al-application-percentage-effects-nospecial_nopilot.png"))
+             fisher_pval_CS = "p-val (FRT)")
+gtsave(table5, here("Tables/wood-et-al-application-percentage-effects-nospecial_nopilot.png"))
+
+gtsave(table5, here("Tables/wood-et-al-application-percentage-effects-nospecial_nopilot.tex")) 
+  
 #---------------------------------------------------------------------------------------------------------------
 ## Robustness check to omitting later cohorts ---- Appendix Figure 4
 #---------------------------------------------------------------------------------------------------------------
@@ -402,7 +405,7 @@ long_table_omit_late_g %>%
   mutate(ymin = estimate + 1.96*se,
          ymax = estimate - 1.96*se)%>% 
   ggplot(aes(x=estimand, y = estimate, ymin = ymin, ymax = ymax, color = estimator, shape = estimator)) +
-  geom_pointrange(position =  position_dodge(width = 0.3), size =.3) +
+  geom_pointrange(position =  position_dodge(width = 0.3), size =.8) +
   facet_wrap(~outcome) + 
   fte_theme() +
   xlab("Estimand") + ylab("Estimate") +
@@ -410,6 +413,8 @@ long_table_omit_late_g %>%
   scale_shape_discrete(name = "Estimator") +
   geom_hline(yintercept = 0)
 
-ggsave(here("Figures/Wood-et-al-application/summary-estimand-comparsion-omit-late-g-nospecial_nopilot.png"),
+ggsave(here("Figures/Wood-et-al-application/summary-estimand-comparsion-omit-late-g-nospecial_nopilot.eps"),
        width = 8, height =4)
 #---------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------
+save.image(here("Temp/wood-et-al-application/main_application.RData"))

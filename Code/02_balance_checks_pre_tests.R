@@ -100,8 +100,8 @@ sustained_results_nospecial_nopilot_omit_late_g  <- balance_checks_for_outcome(o
 force_results_nospecial_nopilot_omit_late_g  <- balance_checks_for_outcome(outcome = "force", 
                                                                            df = pj_officer_level_balanced_nospecial_nopilot_omit_late_g )
 bal_checks_results_nospecial_nopilot_omit_late_g  <- bind_rows(complaints_results_nospecial_nopilot_omit_late_g , 
-                                                     sustained_results_nospecial_nopilot_omit_late_g , 
-                                                     force_results_nospecial_nopilot_omit_late_g )
+                                                               sustained_results_nospecial_nopilot_omit_late_g , 
+                                                               force_results_nospecial_nopilot_omit_late_g )
 
 saveRDS(bal_checks_results_nospecial_nopilot_omit_late_g,
         here("Temp/bal_check_results_nospecial_nopilot_omit_late_g.rds"))
@@ -115,12 +115,12 @@ saveRDS(bal_checks_results_nospecial_nopilot_omit_late_g,
 #function for relabeling estimands
 relabel_estimands <- 
   function(df){
-  df %>%
-  mutate(estimand = replace(estimand, estimand=="all_simple", "Simple")) %>% 
-    mutate(estimand = replace(estimand, estimand=="all_cohort", "Cohort")) %>% 
-    mutate(estimand = replace(estimand, estimand=="all_calendar", "Calendar")) %>% 
-    mutate(estimand = replace(estimand, estimand=="all_ES0", "ES0"))
-}
+    df %>%
+      mutate(estimand = replace(estimand, estimand=="all_simple", "Simple")) %>% 
+      mutate(estimand = replace(estimand, estimand=="all_cohort", "Cohort")) %>% 
+      mutate(estimand = replace(estimand, estimand=="all_calendar", "Calendar")) %>% 
+      mutate(estimand = replace(estimand, estimand=="all_ES0", "ES0"))
+  }
 
 bal_checks_results <- bal_checks_results %>% 
   mutate(sample = "Including pilot + special") %>% 
@@ -138,7 +138,7 @@ bal_checks_results_nospecial_nopilot_omit_late_g <- bal_checks_results_nospecial
 #---------------------------------------------------------------------------------------------------------------
 #Table comparing balance for main estimation sample versus including all officers (Table 6)
 
-rbind(bal_checks_results_nospecial_nopilot, bal_checks_results) %>%
+table6 <- rbind(bal_checks_results_nospecial_nopilot, bal_checks_results) %>%
   select(Xhat, t_test, pvalue_t, fisher_pval, fisher_supt_pval, outcome, estimand, sample) %>%
   tidyr::pivot_wider(id_cols = c(estimand, outcome), 
                      names_from = sample,
@@ -162,13 +162,15 @@ rbind(bal_checks_results_nospecial_nopilot, bal_checks_results) %>%
              "pvalue_t_Main estimation sample"  = "p-val",
              "fisher_pval_Main estimation sample" = "p-val (FRT)",
              "fisher_supt_pval_Main estimation sample" = "Joint p-val \n(FRT)"
-  ) %>%
-  gtsave(here("Tables/wood-et-al-application-balance-checks-main-versus-all.png"))
+  )
+gtsave(table6, here("Tables/wood-et-al-application-balance-checks-main-versus-all.png"))
+gtsave(table6, here("Tables/wood-et-al-application-balance-checks-main-versus-all.tex"))
+
 
 #---------------------------------------------------------------------------------------------------------------
 # Appendix Table 14, which is similar to Table 6 but omit late treated units
 
-rbind(bal_checks_results_nospecial_nopilot, bal_checks_results_nospecial_nopilot_omit_late_g) %>%
+app_table14 <- rbind(bal_checks_results_nospecial_nopilot, bal_checks_results_nospecial_nopilot_omit_late_g) %>%
   select(Xhat, t_test, pvalue_t, fisher_pval, fisher_supt_pval, outcome, estimand, sample) %>%
   tidyr::pivot_wider(id_cols = c(estimand, outcome), 
                      names_from = sample,
@@ -192,8 +194,10 @@ rbind(bal_checks_results_nospecial_nopilot, bal_checks_results_nospecial_nopilot
              "pvalue_t_Main estimation sample"  = "p-val",
              "fisher_pval_Main estimation sample" = "p-val (FRT)",
              "fisher_supt_pval_Main estimation sample" = "Joint p-val \n(FRT)"
-  ) %>%
-  gtsave(here("Tables/wood-et-al-application-balance-checks-main-versus-omit-late.png"))
+  )
+gtsave(app_table14, here("Tables/wood-et-al-application-balance-checks-main-versus-omit-late.png"))
+gtsave(app_table14, here("Tables/wood-et-al-application-balance-checks-main-versus-omit-late.tex"))
+
 
 
 #---------------------------------------------------------------------------------------------------------------

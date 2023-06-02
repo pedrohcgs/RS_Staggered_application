@@ -1,5 +1,5 @@
 # This script replicate the Empirical Application in Roth and Sant'Anna (2023)
-# It reproduces Appendix Figure 3
+# It reproduces Appendix Figure C.3
 #---------------------------------------------------------------------------------------------------------------
 rm(list=ls(all=TRUE))
 #---------------------------------------------------------------------------------------------------------------

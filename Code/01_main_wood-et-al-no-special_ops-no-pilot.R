@@ -219,7 +219,7 @@ ggsave(here("Figures/Wood-et-al-application/summary-estimand-comparsion-nospecia
        plot = Fig1,
        width = 8, height =4)
 #---------------------------------------------------------------------------------------------------------------
-## Efficient Event-study including pre-periods - Appendix Figure 1
+## Efficient Event-study including pre-periods - Appendix Figure C.1
 
 force_ES_results <- compute_efficient_eventstudy_for_outcome(outcome = "force", 
                                                              df=pj_officer_level_balanced_nospecial_nopilot,
@@ -240,7 +240,7 @@ efficient_ES_results <- bind_rows(complaints_ES_results,
                                   force_ES_results) %>% 
   mutate(estimator = "efficient")
 
-# Appendix Figure 1
+# Appendix Figure C1
 efficient_ES_results %>% 
   # mutate(ymin_bonf = estimate + qnorm(1-0.05/2/length(unique(force_ES_results$eventTime)))*se,
   #        ymax_bonf = estimate - qnorm(1-0.05/2/length(unique(force_ES_results$eventTime)))*se)%>%
@@ -261,7 +261,7 @@ efficient_ES_results %>%
 ggsave(here("Figures/Wood-et-al-application/efficient-event-study-plot-nospecial_nopilot-with-pretrends.eps"),
        width = 8, height =4)
 #---------------------------------------------------------------------------------------------------------------
-# Event Study for CS. - Appendix Figure 2
+# Event Study for CS. - Appendix Figure C.2
 force_ES_resultsCS <- compute_efficient_eventstudy_for_outcome(outcome = "force", 
                                                                df=pj_officer_level_balanced_nospecial_nopilot, 
                                                                firstTime = -12,
@@ -287,7 +287,7 @@ efficient_ES_resultsCS <- bind_rows(complaints_ES_resultsCS,
   mutate(estimator = "efficient")
 
 
-# Appendix Figure 2
+# Appendix Figure C2
 efficient_ES_resultsCS %>% 
   # mutate(ymin_bonf = estimate + qnorm(1-0.05/2/length(unique(force_ES_results$eventTime)))*se,
   #        ymax_bonf = estimate - qnorm(1-0.05/2/length(unique(force_ES_results$eventTime)))*se)%>%
@@ -363,7 +363,7 @@ gtsave(table5, here("Tables/wood-et-al-application-percentage-effects-nospecial_
 gtsave(table5, here("Tables/wood-et-al-application-percentage-effects-nospecial_nopilot.tex")) 
   
 #---------------------------------------------------------------------------------------------------------------
-## Robustness check to omitting later cohorts ---- Appendix Figure 4
+## Robustness check to omitting later cohorts ---- Appendix Figure C.4
 #---------------------------------------------------------------------------------------------------------------
 pj_officer_level_balanced_nospecial_nopilot_omit_late_g <- pj_officer_level_balanced_nospecial_nopilot %>%
   filter(first_trained<=60)
@@ -398,7 +398,7 @@ CS_results_omit_late_g <- bind_rows(complaints_results_omit_late_gCS,
 
 long_table_omit_late_g <- bind_rows(efficient_results_omit_late_g,
                                     CS_results_omit_late_g)
-# Appendix Figure 4
+# Appendix Figure C4
 long_table_omit_late_g %>% 
   filter(estimand != "ES0") %>% #remove ES0 since we will have the event-study plot
   mutate(estimator = ifelse(estimator == "efficient", "PlugIn",estimator)) %>%

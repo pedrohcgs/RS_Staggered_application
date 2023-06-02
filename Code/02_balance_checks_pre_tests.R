@@ -168,7 +168,7 @@ gtsave(table6, here("Tables/wood-et-al-application-balance-checks-main-versus-al
 
 
 #---------------------------------------------------------------------------------------------------------------
-# Appendix Table 14, which is similar to Table 6 but omit late treated units
+# Appendix Table 14 (Table C.1), which is similar to Table 6 but omit late treated units
 
 app_table14 <- rbind(bal_checks_results_nospecial_nopilot, bal_checks_results_nospecial_nopilot_omit_late_g) %>%
   select(Xhat, t_test, pvalue_t, fisher_pval, fisher_supt_pval, outcome, estimand, sample) %>%
